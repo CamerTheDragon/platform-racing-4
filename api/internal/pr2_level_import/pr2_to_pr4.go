@@ -12,24 +12,31 @@ func pr2ToPr4(PR2Level PR2Level) PR4Level {
 	if len(artLayers) >= 6 {
 		combinedLayers = []Layer{
 			{
-				Name:    "Art 1",
-				Objects: append(artLayers[0].Objects, artLayers[3].Objects...),
-				Depth:   10,
+				Name:  "Art 1",
+				Lines: artLayers[3].Lines,
+				//Objects: artLayers[0].Objects,
+				Depth: 10,
+				Scale: upscaleRatio,
 			},
 			{
 				Name:   "Blocks",
 				Chunks: blockLayer.Chunks,
 				Depth:  10,
+				Scale:  1,
 			},
 			{
-				Name:    "Art 2",
-				Objects: append(artLayers[1].Objects, artLayers[4].Objects...),
-				Depth:   5,
+				Name:  "Art 2",
+				Lines: artLayers[4].Lines,
+				//Objects: append(artLayers[1].Objects, artLayers[4].Objects...),
+				Depth: 5,
+				Scale: upscaleRatio,
 			},
 			{
-				Name:    "Art 3",
-				Objects: append(artLayers[2].Objects, artLayers[5].Objects...),
-				Depth:   2, // 2.5
+				Name:  "Art 3",
+				Lines: artLayers[5].Lines,
+				//Objects: append(artLayers[2].Objects, artLayers[5].Objects...),
+				Depth: 2, // 2.5
+				Scale: upscaleRatio,
 			},
 		}
 	}
@@ -37,22 +44,24 @@ func pr2ToPr4(PR2Level PR2Level) PR4Level {
 	if len(artLayers) >= 10 {
 		combinedLayers = append(combinedLayers,
 			Layer{
-				Name:    "Art 0",
-				Objects: append(artLayers[6].Objects, artLayers[8].Objects...),
-				Depth:   10,
+				Name:  "Art 0",
+				Lines: artLayers[8].Lines,
+				//Objects: append(artLayers[6].Objects, artLayers[8].Objects...),
+				Depth: 10,
+				Scale: upscaleRatio,
 			},
 			Layer{
-				Name:    "Art 00",
-				Objects: append(artLayers[7].Objects, artLayers[9].Objects...),
-				Depth:   16, // 20
+				Name:  "Art 00",
+				Lines: artLayers[9].Lines,
+				//Objects: append(artLayers[7].Objects, artLayers[9].Objects...),
+				Depth: 16, // 20
+				Scale: upscaleRatio,
 			},
 		)
 	}
 
 	return PR4Level{
 		BackgroundColor: "#FFFFFF",
-		Width:           100, // what is this for?
-		Height:          100, // what is this for?
 		Infinite:        true,
 		Layers:          combinedLayers,
 		Orientation:     "orthogonal",

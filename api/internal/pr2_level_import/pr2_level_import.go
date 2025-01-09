@@ -1,6 +1,7 @@
 package pr2_level_import
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -11,22 +12,21 @@ import (
 )
 
 type Layer struct {
-	Opacity   int         `json:"opacity"`
-	StartX    int         `json:"startx"`
-	StartY    int         `json:"starty"`
-	Type      string      `json:"type"`
-	Name      string      `json:"name"`
-	Visible   bool        `json:"visible"`
-	OffsetX   int         `json:"offsetx"`
-	OffsetY   int         `json:"offsety"`
-	Width     int         `json:"width"`
-	Height    int         `json:"height"`
-	X         int         `json:"x"`
-	Y         int         `json:"y"`
-	Chunks    []Chunk     `json:"chunks"`
-	Depth     int         `json:"depth"`
-	DrawOrder string      `json:"draworder"`
-	Objects   []ArtObject `json:"objects"`
+	Opacity   int     `json:"opacity"`
+	Type      string  `json:"type"`
+	Name      string  `json:"name"`
+	Visible   bool    `json:"visible"`
+	OffsetX   int     `json:"offsetx"`
+	OffsetY   int     `json:"offsety"`
+	Width     int     `json:"width"`
+	Height    int     `json:"height"`
+	X         int     `json:"x"`
+	Y         int     `json:"y"`
+	Chunks    []Chunk `json:"chunks"`
+	Depth     int     `json:"depth"`
+	DrawOrder string  `json:"draworder"`
+	Lines     []Line  `json:"lines"`
+	Scale     float64 `json:"scale"`
 }
 
 type PR4Level struct {
@@ -49,8 +49,27 @@ type Tileset struct {
 	Tiles    map[string]StampData `json:"tiles"`
 }
 
-const baseURL = "https://pr2hub.com/levels"
+const baseURL = "https://pr2hub.com"
 const upscaleRatio = 4.2666666667
+
+func SetupPR2LevelListRoutes(router *gin.Engine) {
+	router.GET("/files/lists/:type/:page", func(c *gin.Context) {
+		levelType := c.Param("type")
+		page := c.Param("page")
+		response, err := listPr2Levels(levelType, page)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Levels not found"})
+		}
+
+		var parsedResponse interface{}
+		err = json.Unmarshal([]byte(response), &parsedResponse)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to parse levels data"})
+			return
+		}
+		c.JSON(http.StatusOK, parsedResponse)
+	})
+}
 
 func SetupPR2LevelImportRoutes(router *gin.Engine, db *gorm.DB) {
 	router.GET("/pr2/level/:id", func(c *gin.Context) {

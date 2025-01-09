@@ -20,12 +20,13 @@ config/icon="res://icon.svg"
 Jukebox="*res://singletons/jukebox/Jukebox.tscn"
 Helpers="*res://singletons/helpers/Helpers.tscn"
 Session="*res://singletons/session/Session.tscn"
-BackgroundsLoader="*res://singletons/BackgroundsLoader.gd"
+CachingLoader="*res://singletons/CachingLoader.gd"
 
 [display]
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+window/size/initial_position_type=0
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
@@ -76,7 +77,7 @@ item={
 
 [physics]
 
-2d/default_gravity=2600.0
+2d/default_gravity=2250.0
 
 [rendering]
 
